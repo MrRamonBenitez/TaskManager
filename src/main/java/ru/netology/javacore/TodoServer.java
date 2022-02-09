@@ -19,16 +19,17 @@ public class TodoServer implements AutoCloseable {
 
     public void start() throws IOException {
         out.println ( "Starting server at " + port + "..." );
-        try (ServerSocket serverSocket = new ServerSocket(port);
-                 Socket clientSocket = serverSocket.accept();
-                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));)
-        {
-            while (true) {
+        while (true) {
+            try (ServerSocket serverSocket = new ServerSocket ( port );
+                 Socket clientSocket = serverSocket.accept ();
+                 PrintWriter out = new PrintWriter ( clientSocket.getOutputStream (), true );
+                 BufferedReader in = new BufferedReader ( new InputStreamReader ( clientSocket.getInputStream () ) );)
+            {
                 String json = in.readLine ();
-                incomingJsonProcessing(json);
+                incomingJsonProcessing ( json );
             }
         }
+
     }
 
     private void incomingJsonProcessing(String json) {

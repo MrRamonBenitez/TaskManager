@@ -21,8 +21,6 @@ public class Client {
         ) {
             out.println("{ \"type\": \"ADD\", \"task\": \"task #" + pickRandomChar() + "\" }");
             System.out.println(in.readLine());
-            out.println("{ \"type\": \"ADD\", \"task\": \"task #" + pickRandomChar() + "\" }");
-            System.out.println(in.readLine());
 
         }
     }
