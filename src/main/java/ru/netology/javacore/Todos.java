@@ -7,34 +7,55 @@ import java.util.stream.Stream;
 import static java.lang.System.out;
 
 public class Todos {
-    private final List<String> taskList = new ArrayList<>();
+    private List<String> taskList;
 
     public Todos() {
+        this.taskList = new ArrayList<>();
+    }
+
+    void setTaskList(List<String> taskList) {
+        this.taskList = taskList;
+    }
+
+    public List<String> getTaskList() {
+        return taskList;
     }
 
     public void addTask(String task) {
-        if ( taskList.isEmpty () || !taskList.contains ( task ) ) {
-            taskList.add ( task );
-        } else out.printf ( "Task %s already exists in the list", task );
-        taskList.stream()
-                .sorted ()
-                .forEach (System.out::println);
+        if ( taskList.contains ( task ) ) out.printf ( "Task %s already exists in the list", task );
+        else taskList.add ( task );
     }
 
     public void removeTask(String task) {
         if (taskList.isEmpty ()) out.println ( "Task list is empty!");
         if ( taskList.contains ( task ) ) taskList.remove ( task );
         else out.printf ( "Task %s does not exist in the list!", task);
-        taskList.stream()
-                .sorted ()
-                .forEach (System.out::println);
     }
 
-    public void getAllTasks() {
-        String msg;
-//        taskList.stream()
-//            .sorted ()
-//            .forEach (System.out::println);
+    public String getAllTasks() {
+        if ( taskList.isEmpty () ) {
+            out.println ( "Task list is empty!" );
+            String actualTaskList = "";
+            return actualTaskList;
+        } else {
+            String actualTaskList = taskList.stream ()
+                    .sorted ()
+                    .collect ( Collectors.joining ( " " ) );
+            return actualTaskList;
+        }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if ( this == o ) return true;
+        if ( !(o instanceof Todos) ) return false;
+        Todos todos = (Todos) o;
+        return taskList.equals ( todos.taskList );
+    }
+
+    @Override
+    public String toString() {
+        return "Todos: "
+                + " " + taskList.toString ();
+    }
 }
