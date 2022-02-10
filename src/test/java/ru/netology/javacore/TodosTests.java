@@ -2,9 +2,9 @@ package ru.netology.javacore;
 
 import org.junit.jupiter.api.*;
 
-import java.lang.reflect.Array;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TodosTests {
