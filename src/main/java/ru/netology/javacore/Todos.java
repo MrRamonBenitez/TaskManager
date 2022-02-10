@@ -1,16 +1,18 @@
 package ru.netology.javacore;
 
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.System.out;
 
+
 public class Todos {
+
     private List<String> taskList;
 
     public Todos() {
-        this.taskList = new ArrayList<>();
+        this.taskList = new ArrayList<> ();
     }
 
     void setTaskList(List<String> taskList) {
@@ -21,34 +23,44 @@ public class Todos {
         return taskList;
     }
 
-    public void addTask(String task) {
-        if ( taskList.contains ( task ) ) out.printf ( "Task %s already exists in the list", task );
-        else taskList.add ( task );
+    public void addTask( String task ) {
+        if ( taskList.contains ( task ) ) {
+            out.printf ( "Task %s already exists in the list", task );
+        } else {
+            taskList.add ( task );
+        }
     }
 
-    public void removeTask(String task) {
-        if (taskList.isEmpty ()) out.println ( "Task list is empty!");
-        if ( taskList.contains ( task ) ) taskList.remove ( task );
-        else out.printf ( "Task %s does not exist in the list!", task);
+    public void removeTask( String task ) {
+        if ( taskList.isEmpty () ) {
+            out.println ( "Task list is empty!" );
+        }
+        if ( taskList.contains ( task ) ) {
+            taskList.remove ( task );
+        } else {
+            out.printf ( "Task %s does not exist in the list!", task );
+        }
     }
 
     public String getAllTasks() {
         if ( taskList.isEmpty () ) {
             out.println ( "Task list is empty!" );
-            String actualTaskList = "";
-            return actualTaskList;
+            return null;
         } else {
-            String actualTaskList = taskList.stream ()
+            return taskList.stream ()
                     .sorted ()
                     .collect ( Collectors.joining ( " " ) );
-            return actualTaskList;
         }
     }
 
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( !(o instanceof Todos) ) return false;
+        if ( this == o ) {
+            return true;
+        }
+        if ( !(o instanceof Todos) ) {
+            return false;
+        }
         Todos todos = (Todos) o;
         return taskList.equals ( todos.taskList );
     }
