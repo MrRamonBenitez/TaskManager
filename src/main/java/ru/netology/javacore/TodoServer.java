@@ -5,14 +5,14 @@ import com.google.gson.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.stream.Collectors;
-
 import static java.lang.System.*;
 
 public class TodoServer implements AutoCloseable {
-    int port;
-    Todos todos;
+    private final int port;
+    private final Todos todos;
+
+    private final GsonBuilder builder = new GsonBuilder ();
+    private final StringBuilder sb = new StringBuilder ();
 
     public TodoServer(int port, Todos todos) {
         this.port = port;
@@ -21,54 +21,54 @@ public class TodoServer implements AutoCloseable {
 
     public void start() throws IOException {
         out.println ( "Starting server at " + port + "..." );
+
         while (true) {
             try (ServerSocket serverSocket = new ServerSocket ( port );
                  Socket clientSocket = serverSocket.accept ();
                  PrintWriter out = new PrintWriter ( clientSocket.getOutputStream (), true );
-                 BufferedReader in = new BufferedReader ( new InputStreamReader ( clientSocket.getInputStream () ) );)
-            {
-                String json = in.readLine ();
-                incomingJsonProcessing ( json );
+                 BufferedReader in = new BufferedReader ( new InputStreamReader ( clientSocket.getInputStream () ) );) {
+
+                incomingJsonProcessing ( in.readLine (), out );
+
             }
         }
 
     }
 
-    private void incomingJsonProcessing(String json) {
-        GsonBuilder builder = new GsonBuilder ();
+    public void incomingJsonProcessing(String json, PrintWriter out) {
         Gson gson = builder.create ();
-        Todo todo = gson.fromJson (json, Todo.class );
-        String typeCommand = todo.getType ();
-        String task = todo.getTask ();
-        if ( "ADD".equals( typeCommand ) ) {
+        ClientCommand clientCommand = gson.fromJson ( json, ClientCommand.class );
+
+        String typeCommand = clientCommand.getType ();
+        String task = clientCommand.getTask ();
+
+        if ( "ADD".equals ( typeCommand ) ) {
             todos.addTask ( task );
-            out.println (printActualTask ());
+            out.println ( printActualTask ( out ) );
         }
-        if ( "REMOVE".equals( typeCommand ) ) {
+        if ( "REMOVE".equals ( typeCommand ) ) {
             todos.removeTask ( task );
-            out.println ( printActualTask () );
+            out.println ( printActualTask ( out ) );
         }
-        if ( "GET ALL".equals( typeCommand ) ) {
-            out.println (todos.getAllTasks ());
+        if ( "GET ALL".equals ( typeCommand ) ) {
+            out.println ( todos.getAllTasks () );
         }
     }
 
-    private String printActualTask() {
-        StringBuilder sb = new StringBuilder ();
+    private String printActualTask( PrintWriter out ) {
         if ( todos.getTaskList ().isEmpty () ) {
             out.println ( "Task list is empty!" );
-            return "";
+            return null;
         } else {
-            Iterator<String> it = todos.getTaskList().iterator();
-            while(it.hasNext()) {
-                sb.append (it.next() + " ");
+            for (String s : todos.getTaskList ()) {
+                sb.append ( s ).append ( " " );
             }
             return sb.toString ();
         }
     }
 
     @Override
-    public void close() throws Exception {
-        out.println ("Server close");
+    public void close() {
+        out.println ( "Server close" );
     }
 }
