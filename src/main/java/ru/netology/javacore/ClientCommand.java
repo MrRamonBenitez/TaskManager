@@ -1,10 +1,10 @@
 package ru.netology.javacore;
 
-public class Todo {
+public class ClientCommand {
     private final String type;
     private final String task;
 
-    public Todo(String type, String task) {
+    public ClientCommand(String type, String task) {
         this.type = type;
         this.task = task;
     }
