@@ -2,13 +2,9 @@ package ru.netology.javacore;
 
 import org.junit.jupiter.api.*;
 
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TodosTests {
-
     Todos testTodos;
     Todos expectedTodos;
 
@@ -18,94 +14,55 @@ public class TodosTests {
     }
 
     @AfterEach
-    public void finished() {
-        System.out.println("Test completed");
-    }
+    public void finished() { System.out.println("Test completed"); }
 
     @AfterAll
-    public static void finishedAll() {
-        System.out.println("Tests completed");
-    }
+    public static void finishedAll() { System.out.println("Tests completed"); }
 
     @BeforeEach
-    void setUp() {
-        testTodos = new Todos ();
-        expectedTodos = new Todos ();
-    }
+    void setUp() { testTodos = new Todos(); }
 
     @Test
     public void testAddTask() {
-
         //arrange
-        List<String> testList = new ArrayList<>();
-        testList.add("Jogging");
-        testList.add("Yoga");
-        testList.add("Studies");
-        testList.add ("Lecture");
-        testTodos.setTaskList (testList);
-
+        int x = 1;
         String testTask = "Meeting";
 
-        List<String> expectedList = new ArrayList<> ();
-        expectedList.add ("Jogging");
-        expectedList.add ("Yoga");
-        expectedList.add ("Studies");
-        expectedList.add ("Lecture");
-        expectedList.add ("Meeting");
-        expectedTodos.setTaskList(expectedList);
-
         //act
-        testTodos.addTask ( testTask );
+        testTodos.addTask(testTask);
 
         //assert
-        Assertions.assertEquals ( expectedTodos, testTodos );
+        assertNotNull(testTodos);
+        assertEquals(x, testTodos.getTaskList().size());
     }
 
     @Test
     public void testRemoveTask() {
-
         //arrange
-        List<String> testList = new ArrayList<>();
-        testList.add("Jogging");
-        testList.add("Yoga");
-        testList.add("Studies");
-        testList.add ("Lecture");
-        testTodos.setTaskList (testList);
-
         String testTask = "Lecture";
-
-        List<String> expectedList = new ArrayList<> ();
-        expectedList.add ("Jogging");
-        expectedList.add ("Yoga");
-        expectedList.add ("Studies");
-        expectedTodos.setTaskList(expectedList);
+        testTodos.addTask(testTask);
 
         //act
-        testTodos.removeTask ( testTask );
+        testTodos.removeTask(testTask);
 
         //assert
-        Assertions.assertEquals ( expectedTodos, testTodos );
-
+        assertTrue(testTodos.getTaskList().isEmpty());
     }
 
     @Test
-    public void testGetAllTasks() {
+    public void testGetAllTask() {
         //arrange
-        List<String> testList = new ArrayList<>();
-        testList.add("Jogging");
-        testList.add("Yoga");
-        testList.add ("Lecture");
-        testList.add("Studies");
-        testTodos.setTaskList (testList);
-
-        String expectedMsg = "Jogging Lecture Studies Yoga";
+        testTodos.addTask("Studies");
+        testTodos.addTask("Meeting");
+        testTodos.addTask("Yoga");
+        testTodos.addTask("Lecture");
+        testTodos.addTask("Jogging");
 
         //act
-        String testMsg = testTodos.getAllTasks ();
+        String actualMsg = testTodos.getAllTasks();
 
         //assert
-        Assertions.assertEquals ( expectedMsg, testMsg );
-
+        String expectedMsg = "Jogging Lecture Meeting Studies Yoga";
+        assertEquals(expectedMsg, actualMsg);
     }
-
 }
