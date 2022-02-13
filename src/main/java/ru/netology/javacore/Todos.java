@@ -2,7 +2,6 @@ package ru.netology.javacore;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static java.lang.System.out;
 
 public class Todos {
