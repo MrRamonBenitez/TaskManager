@@ -40,8 +40,7 @@ public class Todos {
 
     public String getAllTasks() {
         if (taskList.isEmpty()) {
-            out.println("Task list is empty!");
-            return null;
+            return "Task list is empty!";
         } else {
             return taskList.stream()
                     .sorted()

@@ -19,49 +19,48 @@ public class TodoServer implements AutoCloseable {
         this.todos = todos;
     }
 
-    public void start() {
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            out.println("Starting server at " + port + "...");
+    public void start() throws IOException {
+        out.println("Starting server at " + port + "...");
 
-            while (true) {
-                try (
-                        Socket clientSocket = serverSocket.accept();
-                        PrintWriter out =
-                            new PrintWriter(clientSocket.getOutputStream(), true);
-                        BufferedReader in =
-                            new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
-                ) {
-                    String json;
-                    while ((json = in.readLine()) != null) {
-                        Gson gson = builder.create();
-                        ClientCommand clientCommand = gson.fromJson(json, ClientCommand.class);
-
-                        String typeCommand = clientCommand.getType();
-                        String task = clientCommand.getTask();
-
-                        if ("ADD".equals(typeCommand)) {
-                            todos.addTask(task);
-                            out.println(printActualTask(out));
-                        } else if ("REMOVE".equals(typeCommand)) {
-                            todos.removeTask(task);
-                            out.println(printActualTask(out));
-                        } else if ("GET ALL".equals(typeCommand)) {
-                            out.println(todos.getAllTasks());
-                        }
-                   }
-                }
+        while (true) {
+            try (ServerSocket serverSocket = new ServerSocket(port);
+                 Socket clientSocket = serverSocket.accept();
+                 PrintWriter out =
+                    new PrintWriter(clientSocket.getOutputStream(), true);
+                 BufferedReader in =
+                    new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
+                 ) {
+                        String json = in.readLine();
+                        jsonProcessing(json, out);
             }
-
-        } catch (IOException ex) {
-                ex.printStackTrace(System.out);
         }
     }
 
+
+    public void jsonProcessing(String json, PrintWriter out){
+        Gson gson=builder.create();
+        ClientCommand clientCommand=gson.fromJson(json,ClientCommand.class);
+
+        String typeCommand=clientCommand.getType();
+        String task=clientCommand.getTask();
+
+        if ("ADD".equals(typeCommand)) {
+            todos.addTask(task);
+            out.println(printActualTask(out));
+        } else if
+            ("REMOVE".equals(typeCommand)) {
+            todos.removeTask(task);
+            out.println(printActualTask(out));
+        } else if
+            ("GET ALL".equals(typeCommand)) {
+            out.println(todos.getAllTasks());
+        }
+    }
+
+
     public String printActualTask (PrintWriter out){
         if (todos.getTaskList().isEmpty()) {
-            out.println("Task list is empty!");
-            return null;
+            return "Task list is empty!";
         } else {
             return todos.getTaskList().stream()
                         .sorted()
