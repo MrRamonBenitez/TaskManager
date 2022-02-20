@@ -1,12 +1,10 @@
 package ru.netology.javacore;
 
 import org.junit.jupiter.api.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TodosTests {
     Todos testTodos;
-    Todos expectedTodos;
 
     @BeforeAll
     public static void started() {
@@ -65,4 +63,8 @@ public class TodosTests {
         String expectedMsg = "Jogging Lecture Meeting Studies Yoga";
         assertEquals(expectedMsg, actualMsg);
     }
+
 }
+
+
+
