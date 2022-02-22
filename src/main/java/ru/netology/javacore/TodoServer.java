@@ -39,10 +39,10 @@ public class TodoServer implements AutoCloseable {
 
     public void jsonProcessing(String json, PrintWriter out) {
         Gson gson=builder.create();
-        ClientCommand clientCommand=gson.fromJson(json,ClientCommand.class);
+        ClientCommand clientCommand = gson.fromJson(json,ClientCommand.class);
 
-        String typeCommand=clientCommand.getType();
-        String task=clientCommand.getTask();
+        String typeCommand = clientCommand.getType();
+        String task = clientCommand.getTask();
 
         if ("ADD".equals(typeCommand)) {
             todos.addTask(task);
